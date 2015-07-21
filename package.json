@@ -1,0 +1,14 @@
+{
+  "name": "mirror",
+  "version": "1.0.0",
+  "description": "a consistent watcher object that implements immutablity internally.  ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ido-ofir",
+  "license": "ISC",
+  "dependencies": {
+    "immutable": "^3.7.4"
+  }
+}
