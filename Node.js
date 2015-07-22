@@ -1,9 +1,19 @@
 
+var debugging = true;
+
 function Node(props) {
     for(var m in props){
         this[m] = props[m];
     }
 }
+
+function bubble(_$, args) {
+    if(_$ && _$.parent){
+        _$.parent.$.fire.apply(_$.parent.$, args);   // propagate up the tree
+    }
+}
+
+var l;
 
 var NodePrototype = {
     on: function(eventName, listener){
@@ -13,7 +23,7 @@ var NodePrototype = {
             Object.defineProperty(this, '_eventListeners', {
                 configurable: false,
                 writable: true,
-                enumerable: false,
+                enumerable: debugging,
                 value: listeners
             });
         }
@@ -36,17 +46,15 @@ var NodePrototype = {
         var args,
             cancel,
             listeners = this._eventListeners;
-        if(!listeners) return;
+        if(!listeners) return bubble(this._$, arguments);
         listeners = listeners[eventName];
-        if(!listeners) return;
+        if(!listeners) return bubble(this._$, arguments);
         args = [].slice.call(arguments, 1);
         for(var i = 0; i < listeners.length; i++){
             cancel = listeners[i].apply(this, args);
             if(cancel === false) return;  // cancel the event by returning false
         }
-        if(this._$.parent){
-            this._$.parent.fire.apply(this._$.parent, arguments);   // propagate up the tree
-        }
+        bubble(this._$, arguments)
     }
 };
 Node.prototype = NodePrototype;
